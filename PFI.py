@@ -1,80 +1,164 @@
-lista_productos = []
+# ARMAMOS UN ARCHIVO DESDE CERO SEGUN LOS REQUERIMIENTOS FINALES
 
 
-def agregar_producto(producto, cantidad_ingresada, precio):
-    lista_productos.append([producto, cantidad_ingresada, precio])
+# ******************************************************************
+# DECLARACION DE VARIABLES
+# ******************************************************************
+# a fines practicos (temporalmente hasta que implementemos Base de Datos) almacenamos en lista o diccionario
+lista_productos = []  # esta variable lista luego se reemplazar por una tabla en SQLite
+inventario = {}  # esta variable diccionario luego se reemplazar por una tabla en SQLite
+# Modelo del diccionario para un producto dado
+# producto = {
+#     "nombre": None,
+#     "descripcion": None,
+#     "cantidad": 100,
+#     "precio": None,
+#     "categoria": None,
+# }
+
+
+# ******************************************************************
+# DECLARACION DE FUNCIONES
+# ******************************************************************
+
+
+# Funcion que muestra el menú
+def mostrar_menu():
+    print("-" * 30)
+    print(" Menú principal")
+    print("-" * 30)
+    print(
+        "1. Agregar Producto \n2. Mostrar Producto \n3. Actualizar \n4. Eliminar \n5. Buscar Producto \n6. Reporte Bajo Stock \n7. Salir"
+    )
+    opcion = input("Ingrese la opción deseada: ")
+    # Agregan un modulo de validacion para evitar errores - PENDIENTE
+    # retorno un Str
+    return opcion
+
+
+# Función alta o registro de producto
+def registrar_producto(nombre, descripcion, cantidad, precio, categoria):
+    # Cuerpo de la función
+    nuevo_producto = {
+        "nombre": nombre,
+        "descripcion": descripcion,
+        "cantidad": cantidad,
+        "precio": precio,
+        "categoria": categoria,
+    }
+    inventario[nombre] = (
+        nuevo_producto  # Usamos el nombre como clave para facilitar la búsqueda
+    )
+
+
+# print("REGISTRAR PRODUCTO")
+# Función que muestra los productos almacenados en nuestro inventario
 
 
 def mostrar_productos():
-    indice = 0
-    while indice < len(lista_productos):
-        print(
-            f"{"-*" * 15} \nProducto: {lista_productos[indice][0]} \nCantidad: {lista_productos[indice][1]} \nPrecio unitario: $ {lista_productos[indice][2]}"
-        )
-        indice += 1
-
-
-while True:
-    print("-" * 30)
-    print("Menu principal ")
-    print("-" * 30)
-    print(
-        "\n1.Buscar producto \n2.lista \n3.Agregar producto \n4.Actualizar stock \n5.Eliminar producto \n6.Salir"
-    )
-
-    print("-" * 30)
-    opcion = input("Ingrese una opción: ")
-    print("-" * 30)
-
-    if opcion == "3":
-        while True:
-            producto = str(input("Ingrese nombre de producto: "))
-            cantidad_ingresada = int(input("Cantidad a ingresar: "))
-            precio = str(input("Precio unitario: "))
-            agregar_producto(producto, cantidad_ingresada, precio)
-
-            print("-" * 11, "******", "-" * 11)
-            confirmar_ingreso = str(
-                input("Quiere agregar otro producto? (S/N): ")
-            ).lower()
-            print()
-            print("-" * 11, "******", "-" * 11)
-
-            if confirmar_ingreso == "n":
-                break
-
-    elif opcion == "2":
-        print("-" * 11, "******", "-" * 11)
-        mostrar_productos()
-        print("-" * 11, "******", "-" * 11)
-
-        volver = str(input("Volver al menu (S): ").lower())
-
-    elif opcion == "6":
-        break
-
-    elif opcion == "4":
-        nombre_producto = input("\nIngrese nombre del producto: ")
-        nombre_inexistente = True
-        for lista in lista_productos:
-            if nombre_producto == lista[0]:
-                nombre_producto = False
-            print(f"producto {lista[0]} \ncantidad {lista[1]} ")
-            venta = int(input("Ingrese cantidad vendida: "))
-
-            while venta > lista[1] or venta <= 0:
-                print("Reintente Error")
-                venta = int(input("Ingrese cantidad vendida: "))
-
-                lista[1] = lista[1] - venta
-
-                print(f"Actualizacion: \nProducto: {lista[0]} \nCantidad: {lista[1]}")
-                break
-
-        if nombre_inexistente:
-            print("\n Nombre no encontrado")
-
+    # Cuerpo de la función
+    if lista_productos:
+        for producto in lista_productos:
+            print(
+                f"Nombre: {producto['nombre']}, Descripción: {producto['descripcion']}, Cantidad: {producto['cantidad']}, Precio: {producto['precio']}, Categoría: {producto['categoria']}"
+            )
     else:
-        print("-" * 11, "******", "-" * 11)
-        print("Opcion no valida")
-        print("-" * 11, "******", "-" * 11)
+        print("No hay productos registrados.")
+
+
+# Función que actualiza los datos de un producto especifico
+def actualizar_producto():
+    # Cuerpo de la función
+    nombre_producto = input("Ingrese el nombre del producto a actualizar: ")
+    for producto in lista_productos:
+        if producto["nombre"] == nombre_producto:
+            # Actualizar los campos deseados
+            producto["cantidad"] = int(input("Nueva cantidad: "))
+            # ... otros campos a actualizar
+            print("Producto actualizado exitosamente.")
+    return print("Producto no encontrado.")
+
+    # print("ACTUALIZAR UN PRODUCTO")
+
+
+# Función que elimina un producto especifico
+def eliminar_producto():
+    # Cuerpo de la función
+    nombre_producto = input("Ingrese el nombre del producto a eliminar: ")
+    for i, producto in enumerate(lista_productos):
+        if producto["nombre"] == nombre_producto:
+            del lista_productos[i]
+            print("Producto eliminado.")
+            return
+    print("Producto no encontrado.")
+
+
+# print("ELIMINAR UN PRODUCTO")
+
+
+# Función que busca un producto especifico
+def buscar_producto():
+    # Cuerpo de la función
+    nombre_producto = input("Ingrese el nombre del producto a buscar: ")
+    for producto in lista_productos:
+        if producto["nombre"] == nombre_producto:
+            print(producto)
+            return
+    print("Producto no encontrado.")
+    # print("BUSCAR UN PRODUCTO")
+
+
+# Función que genera un reporte de Bajo Stock
+def reporte_bajo_stock():
+    # Cuerpo de la función
+    # Pedir al usuario que ingrese el umbral_minimo_stock
+    umbral = int(input("Ingrese el umbral mínimo de stock: "))
+    for producto in lista_productos:
+        if producto["cantidad"] < umbral:
+            print(f"Producto: {producto['nombre']}, Cantidad: {producto['cantidad']}")
+    # print("REPORTE DE BAJO STOCK")
+
+
+def main():  # funcion o cuerpo principal del archivo Python
+    while True:
+        opcion = mostrar_menu()  # esta aca dentro opcion = input("Elija una opción: ")
+        print(
+            "Usted selcciono: ", opcion
+        )  # imprime la opción seleccionada por el usuario
+
+        if opcion == "1":
+            opcion = registrar_producto()
+
+        elif opcion == "2":
+            # mostrar_productos()
+            # elif opcion == "3":
+            eliminar_producto()
+        elif opcion == "3":
+            actualizar_producto()
+
+        elif opcion == "4":
+            eliminar_producto()
+
+        elif opcion == "5":
+            buscar_producto()
+
+        elif opcion == "6":
+            reporte_bajo_stock()
+
+        elif opcion == "7":
+            print("Adios")
+            break
+        else:
+            print("Opción no válida. Por favor, elija una opción válida.")
+
+        continuar = input(
+            "Presione 's' para terminar..."
+        ).lower()  # pausa para que el usuario pueda ver
+        if continuar == "s":
+            break
+
+
+# ******************************************************************
+# INVOCAMOS A LA FUNCION PRINCIPAL
+# ******************************************************************
+main()  # invocar o llamar a la funcion main()
