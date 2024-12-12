@@ -1,4 +1,4 @@
-Introducción
+Introducción:
 Control stock 2.0 es una herramienta diseñada para simplificar la gestión de tu inventario. Con esta app, podrás llevar un control preciso de tus productos, recibir alertas de stock bajo y optimizar tus procesos de compra y venta.
 
 Funcionalidades Principales
